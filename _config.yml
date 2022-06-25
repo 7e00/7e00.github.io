@@ -1,2 +1,8 @@
 markdown: rdiscount
 baseurl: /narutoacm.github.com
+
+title: NARUTOACM
+description: Searching a free life style ...
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-architect
