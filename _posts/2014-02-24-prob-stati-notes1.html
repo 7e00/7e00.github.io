@@ -1,0 +1,31 @@
+---
+layout: post
+title: 概率统计学相关笔记（一）
+---
+
+<h2>{{ page.title }}</h2>
+<p>
+<strong>随机变量(Random Variable)</strong>：概率初学者有时候可能会很困惑，记得之前讲概率都是P(A)，P(B)的，都是一个事件发生的概率，然后什么独立事件啊，条件概率啊，贝叶斯啊，都是针对事件啊，不知道从什么时候开始冒出一个随机变量，就变成P(X)了。其实，只要明确一点，<strong>“random variable is a mapping”</strong>！随机变量是一个从样本空间到实数集的映射\[X:\Omega\to \mathbb{R},\]该映射对样本空间\(\Omega\)中的每个元素\(\omega\)，都对应到一个实值\(X(\omega)\)。
+
+这样，对于概率\(P(X=x)\)，实际上指的是\(P(\{\omega\in \Omega :X(\omega)=x\})\)，后者其实就是样本空间中一个事件的概率。
+
+<strong>联合分布(Joint distribution)</strong>：有时候可能会纳闷怎么突然出现一个所谓的联合分布？联合分布实际上对应2个事件同时发生的概率的分布情况，以离散型随机变量为例，联合密度函数\(f(x,y)=P(X=x and Y=y)\)，后者一般简写成\(P(X=x,Y=y)\)。所以，在比如求X+Y的概率密度时，为什么需要先知道联合概率密度\(f(x,y)\)，因为我们需要考虑它们所有组合一起出现的情况。
+
+<strong>独立随机变量(Independent Random Variables)</strong>：如果对任意的<strong>实数上的集合A和B</strong>都有\[P(X\in A,Y\in B)=P(X\in A)P(Y\in B),\]那么就称随机变量X和Y是独立的。
+
+基本上很难用这个定义去证明两个随机变量是否独立，然而，<strong>有一个定理指出，如果\(f_{X,Y}(x,y)=f_X(x)f_Y(y)\)，那么X和Y就是独立的</strong>。一般我们要证明2个随机变量独立，只要看它们的联合概率密度是否等于各自的概率密度的乘积。
+
+<strong>还有一个更牛逼的定理证明是否独立</strong>：假设X和Y的取值范围都一个矩形的区域（可以是无穷的），如果存在函数g和h（不要求是概率密度函数），有\(f(x,y)=g(x)h(y)\)，那么X和Y是独立的，其中\(f(x,y)\)是它们的联合概率密度。
+
+<strong>条件分布(Conditional Distributions)</strong>：条件分布是指，在已知某个随机变量的一个取值情况下，另一个随机变量的分布情况。对离散型随机变量X，Y，\[f_{X|Y}(x|y)=P(X=x|Y=y)=\frac{P(X=x,Y=y)}{P(Y=y)}=\frac{f_{X,Y}(x,y)}{f_Y(y)},\]\(f_{X|Y}(x|y)\)叫做已知Y，X对于Y的条件概率密度。\(f_{X|Y}(x|y)\)实际上是一个关于x,y的2元函数，对于每一个固定的y值，它就成了一个关于x的概率密度函数（亦即符合概率密度的定义，如积分等于1等）。<strong>但是反过来，固定x值，它不是一个关于y的概率密度函数</strong>！
+
+<strong>随机变量的变换</strong>：对于一个随机变量X，令Y=r(X)，其中r是一个实数到实数的映射。我们知道X是一个样本空间到实数的映射，所以Y也是一个样本空间到实数的映射，即也是一个随机变量。在已知X的分布情况下，如何求Y的分布？<strong>3个步骤</strong>：
+
+1.对每个y，求集合\(A_y=\{x:r(x)\le y\}\).
+
+2.求CDF\[\begin{array}{l}F_Y(y) &amp; = &amp; P(Y\le y)=P(r(X)\le y) \\ &amp; = &amp; P(\{x:r(x)\le y\}) \\ &amp; = &amp; \int_{A_y}f_X(x)\,\mathrm{d}x.\end{array}\]3.PDF即为\(f_Y(y)=F_Y'(y)\).
+
+对于多个随机变量的变换，如X+Y等，也是类似的步骤。
+</p>
+<p>{{ page.date | date_to_string }}</p>
+
