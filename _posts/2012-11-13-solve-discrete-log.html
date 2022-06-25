@@ -1,0 +1,21 @@
+---
+layout: post
+title: 求解a^x=b(mod m)
+---
+
+<h2>{{ page.title }}</h2>
+通过<a title="求解x≡a^b(mod m)" href="https://narutoacm.github.io/2012/11/06/a-pow-b-mod-m.html" target="_blank">这篇</a>文章，我们知道了如何求解一个数的幂次模另一个数。现在，讨论下指数的求法。在<a title="求解x≡a^b(mod m)" href="http://www.narutoacm.com/archives/a-pow-b-mod-m/" target="_blank">这篇</a>文章中，我们还知道<a title="指数循环节" href="http://www.narutoacm.com/archives/a-pow-b-mod-m/#repetend" target="_blank">指数循环节</a>的存在，所以x可以存在无穷多解的情况，并且解依赖于循环节起始位置，长度和x的最小值。由于循环节只依赖于定值a和m，所以这里<strong>只考虑求x的最小值</strong>。
+
+当m比较小时，可以用<strong>枚举法</strong>。x从0开始枚举，直到出现a<sup>x</sup>≡b(mod m)或者出现了循环（此时无解）。然而，这种方法最坏情况下可能需要枚举几乎m个数才得出解或无解，如m是素数且a是m的<a title="原根若干性质及最小原根的求解" href="http://www.narutoacm.com/archives/primitive-root/" target="_blank">原根</a>（如果你不知道什么是原根，不必纠结，和本文无关）。这样，当m比较大时，线性算法已经不能有效出解。
+
+先讨论m是素数的情况。当m是素数时，要么gcd(a,m)=m，要么gcd(a,m)=1。对于前者，显然b要么为1，此时x为0，要么b为0，此时x等于1。对于后者，假设我们求出了x，令x=i*n + j，其中n是小于m且大于sqrt(m)的任意整数，这样<strong>x就对应于唯一一个数对(i, j)，其中i,j都小于n</strong>。于是
+<p style="text-align: center;"><strong>a<sup>x</sup>≡a<sup>i*n</sup>a<sup>j</sup>≡b(mod m)</strong></p>
+这样，如果我们事先把a<sup>0</sup>, a<sup>1</sup>, ..., a<sup>n-1</sup>(mod m)的值存起来（事实上，遇到循环即可停止），记录这些值对应的最小指数。然后枚举i从0 ~ n-1，令A≡a<sup>i*n</sup>(mod m)，求出Ak≡b(mod m)的解k，因为gcd(a,m)=1，所以<strong>gcd(A,m)=1，由线性同于式定理可知这个解唯一</strong>。然后查看之前的记录，如果有某个指数j使得a<sup>j</sup>≡k(mod m)，则<strong>x即为i*n + j。由于我们从0开始枚举i，所以这样可以保证求出的指数一定是最小的</strong>。这样，如果不考虑查找记录的开销，复杂度就只和n有关，显然这里n取ceil(sqrt(m))最优。这个想法可不是我原创，实际上这个算法叫做baby-step giant-step算法。
+
+当m是任意数时，注意到上述方法中，我们实际上<strong>只利用了gcd(a,m)=1</strong>这个结果。所以如果gcd(a, m) = 1，这样就可以类似的求解x。
+
+当a和m不互素时，令d=gcd(a,m)，如果b不能被d整除，则显然无解。否则，令m′=m/d，a′=a/d，b′=b/d。由a<sup>x</sup>≡b(mod m)可知a′a<sup>x-1</sup>≡b′(mod m′)。由于gcd(a′,m′)=1，我们知道同余式a′y≡b′(mod m′)有唯一解。这样可以得到
+<p style="text-align: center;"><strong>a<sup>x-1</sup>≡y(mod m′)</strong></p>
+<strong>这就变成了原问题</strong>。若此时gcd(a, m′)=1，则可用上述方法求出x-1，也就求出了x。否则，继续重复上述步骤，直到出现a<sup>x-k</sup>≡y(mod m′)，此时gcd(a,m′)=1。这样求出x-k后加上k即为x。
+<p>{{ page.date | date_to_string }}</p>
+

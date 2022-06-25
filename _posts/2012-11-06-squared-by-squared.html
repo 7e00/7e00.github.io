@@ -1,0 +1,35 @@
+---
+layout: post
+title: 利用逐次平方法快速求幂
+---
+
+<h2>{{ page.title }}</h2>
+<p>
+利用逐次平方法可以快速求幂，这里不局限于数的幂，但以数的幂来举例说明。
+
+要求a<sup>k</sup>，如果直接用a连乘k次，复杂度比较大。如果把k写成如下形式：
+
+k = u<sub>0</sub> + 2u<sub>1</sub> + 2<sup>2</sup>u<sub>2</sub> + ... + 2<sup>r</sup>u<sub>r</sub>, u<sub>i</sub> = 0 或 1.
+
+然后制作模a的幂次表：
+
+a<sup>1</sup> = A<sub>0</sub>,
+a<sup>2</sup> = (a<sup>1</sup>)<sup>2</sup> = A<sub>0</sub><sup>2</sup> = A<sub>1</sub>,
+...
+a<sup>2<sup>r</sup></sup> = (a<sup>2<sup>r-1</sup></sup>)<sup>2</sup> = A<sub>r-1</sub><sup>2</sup> = A<sub>r</sub>.
+
+于是<strong>a<sup>k</sup> = A<sub>0</sub><sup>u<sub>0</sub></sup>A<sub>1</sub><sup>u<sub>1</sub></sup>...A<sub>r</sub><sup>u<sub>r</sub></sup></strong>。
+
+注意到A<sub>i</sub>即为A<sub>i-1</sub>的平方，这样复杂度就降为O(log(k))，即为O(r)。以下伪码是实现逐次平方法的有效代码：
+[c]
+b = 1;
+while k is positive do
+    if k is odd 
+        then b = a*b;
+    a = a*a;
+    k shift right by 1 bit;
+return b;
+[/c]
+</p>
+<p>{{ page.date | date_to_string }}</p>
+

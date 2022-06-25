@@ -1,0 +1,57 @@
+---
+layout: post
+title: 原根若干性质及最小原根的求解
+---
+
+<h2>{{ page.title }}</h2>
+<span style="color: #2087de; font-weight: bold;">重要修正：本想把原根的概念推广到所有正整数，之后就可作为解决一般性问题<a title="求解部分x^k=b(mod m)问题" href="https://narutoacm.github.io/2012/11/29/k-root-of-b-mod-m.html" target="_blank">x<sup>k</sup>≡b(mod m)</a>的基础（我原本就是打算写这个主题，先写本文是为了引出先导性的知识）。然而测试之后发现m为9407的时候，这个数根本没有原根！这之后就纠结了？到底是哪里出了问题？之后一直仔细排查，发现是<a title="多项式模m为0的解个数定理" href="#poly"><span style="color: #ff0000; text-decoration: underline;">这个定理</span></a>出了问题！如果m是任意整数，那么n次多项式就可能有超过n个根！现在是，原根的概念虽然还可以推广，但是推广后，推广的原根定理却站不住脚了（不是所有数都有原根！），这就不能一般性的解决所有x<sup>k</sup>≡b(mod m)问题。下面我把该文原来错误的部分留着，但是加上删除线标记，同时修正的部分加上下划线标记！</span>
+
+原根本是关于素数的一个概念，但是可以推广到所有正整数中。若是不想看证明，请先确保瞟一眼<a title="原根" href="#pr">原根的定义</a>，然后直接移至<a title="求解最小原根" href="#spr">最小原根的求法</a>，如果时间稍微充裕，也可浏览一遍各定理，但是强烈建议看一遍证明！
+
+<strong>欧拉Φ函数求和公式</strong>：设d<sub>1</sub>,...,d<sub>r</sub>是d的因数，则有Φ(d<sub>1</sub>)+...+Φ(d<sub>r</sub>)=d。
+
+<strong>证明</strong>：令f(d)=Φ(d<sub>1</sub>)+...+Φ(d<sub>r</sub>)，d<sub>1</sub>,...,d<sub>r</sub>是d的因数。于是现在即要证明f(d)=d。设有m和n且gcd(m,n)=1，m<sub>i</sub>和n<sub>j</sub>分别是m和n的任意因数。显然gcd(m<sub>i</sub>,n<sub>j</sub>)=1，因此Φ(m<sub>i</sub>n<sub>j</sub>)=Φ(m<sub>i</sub>)Φ(n<sub>j</sub>)。而mn的所有因数就是m的其中一个因数乘以n的其中一个因数的不同组合，因此不难得到f(mn)=f(m)f(n)！
+
+若d为素数的幂次，显然f(d)=d。否则，把d分解成素数乘积，由于彼此互素，因此由上述结论可知f(d)=d，证毕！
+
+<a name="poly"></a><strong>多项式模m为0的解个数定理</strong>：f(x)为最高次数为n次的多项式，m为<del>任意正整数</del><span style="text-decoration: underline; color: #ff0000;">素数</span>，则f(x)≡0(mod m)最多有n个解。
+
+<strong>证明</strong>：n=1时显然成立。设当n≤k时，f(x)≡0(mod m)最多有n个解。设g(x)为最高次数为k+1的多项式，若g(x)≡0(mod m)无解，则证明了n=k+1时也成立。否则，设其中一个解为a，并设g(a)=km，即<strong>a是多项式g(x)-km=0的一个解</strong>。因此可令g(x)-km=(x-a)h(x)，其中h(x)是一个最高次数为k的多项式。于是有
+<p style="text-align: center;"><strong>g(x)≡g(x)-km≡(x-a)h(x)(mod m).</strong></p>
+由于h(x)的次数≤k<span style="text-decoration: underline; color: #ff0000;">且m是素数（m是素数意味着m|(x-a)或m|h(x)，可同时成立）</span>，因此(x-a)h(x)≡0(mod m)至多有k+1个解，也即g(x)至多有k+1个解！由数学归纳法知定理成立，证毕！
+
+<strong>次数</strong>：对任意正整数a与m，其中gcd(a,m)=1，使得a<sup>e</sup>≡1(mod m)的最小指数e≥1叫做a模m的次数，记作e<sub>m</sub>(a)。
+
+<strong>次数整除性质</strong>：若有a<sup>n</sup>≡1(mod m)，则次数e<sub>m</sub>(a)整除n。特别的，次数总整除Φ(m)。
+
+<strong>证明</strong>：令g = gcd(n,e<sub>m</sub>(a))，则求得x, y使得nx + e<sub>m</sub>(a)y = g，于是有a<sup>nx</sup>≡1≡a<sup>g</sup>(mod m)，由次数的最小性可得g = e<sub>m</sub>(a)，即有e<sub>m</sub>(a)|n。又欧拉公式告诉我们a<sup>Φ(m)</sup>≡1(mod m)，结合上边推理可知次数总整除Φ(m)。证毕！
+
+<a name="pr"></a><strong>原根</strong>：使得e<sub>m</sub>(g)=Φ(m)数g称为模m的原根。
+
+<strong>原根定理</strong>：每个<del>正整数m</del><span style="text-decoration: underline; color: #ff0000;">素数m</span>都有恰好Φ(Φ(m))<span style="text-decoration: underline; color: #ff0000;">即Φ(m-1)</span>个原根。
+
+<strong>证明</strong>：若gcd(a,m)=1，根据次数整除性质可知e<sub>m</sub>(a)|Φ(m)。因此，若a是模m的原根，则a的次数整除Φ(m)。令
+<p style="text-align: center;">Ψ(d)=#{e<sub>m</sub>(a)=d}, 其中d|Φ(m), 1≤a≤m且gcd(a,m)=1.</p>
+Ψ(d)的含义是指，次数为d的不大于m的数的个数，其中d整除Φ(m)。<strong>由Ψ的定义可知Ψ(Φ(m))即为m的原根个数</strong>！
+
+设Φ(m)=kd，有x<sup>Φ(m)</sup>-1≡(x<sup>d</sup>-1)((x<sup>d</sup>)<sup>k-1</sup>+...+x<sup>n</sup>+1)(mod m)。注意到<strong>x<sup>Φ(m)</sup>-1≡0(mod m)恰好有Φ(m)个解</strong>。而由上述多项式模m为0的解个数定理可知<span style="text-decoration: underline; color: #ff0000;">，由于m是素数，</span>x<sup>d</sup>-1≡0(mod m)至多有d个解，同理(x<sup>d</sup>)<sup>k-1</sup>+...+x<sup>n</sup>+1≡0(mod m)至多有d(k-1)个解。而Φ(m)=kd，因此，x<sup>d</sup>-1≡0(mod m)必有恰好d个解！这告诉我们：<strong>若d|Φ(m)，则同余式x<sup>d</sup>-1≡0(mod m)恰好有d个根满足0≤x&lt;m</strong>！另外，次数整除性质告诉我们，若a<sup>d</sup>-1≡0(mod m)，则有e<sub>m</sub>(a)|d。若d有r个因数，分别为：d<sub>1</sub>,...,d<sub>r</sub>，于是由Ψ的定义我们知道，x<sup>d</sup>-1≡0(mod m)的解的个数，即d等于Ψ(d<sub>1</sub>)+...+Ψ(d<sub>r</sub>)！<strong>总结一下</strong>：若d|Φ(m)，d<sub>1</sub>,...,d<sub>r</sub>是d的因数（包括1和d），则有
+<p style="text-align: center;">d=Ψ(d<sub>1</sub>)+...+Ψ(d<sub>r</sub>).</p>
+这似乎就是上面的欧拉Φ函数求和公式！很容易由数学归纳法证明Φ和Ψ是相同的。当n=1时，Φ(n)=Ψ(n)=1显然成立。若对所有d&lt;n有Φ(d)=Ψ(d)，设n的因数为d<sub>1</sub>,...,d<sub>r</sub>，不妨设d<sub>1</sub>=n，因此有Ψ(n)+Ψ(d<sub>2</sub>)+...+Ψ(d<sub>r</sub>)=n=Φ(n)+Φ(d<sub>2</sub>)+...+Φ(d<sub>r</sub>)。由于Φ(d<sub>i</sub>)=Ψ(d<sub>i</sub>),2≤i≤r，所以有Ψ(n)=Φ(n)！因此，我们证明了Ψ(Φ(m))就为Φ(Φ(m))，<span style="text-decoration: underline; color: #ff0000;">即Φ(m-1)，</span>证毕！
+
+对任意正整数m，若m有原根g，由原根定义容易得出
+<p style="text-align: center;"><strong>g,g<sup>2</sup>,...,g<sup>Φ(m)</sup>(mod m)</strong></p>
+<strong>是所有小于m且与m互素的Φ(m)个数</strong>！用群论的观点来讲，<strong>所谓原根，就是一个群的生成元，这个群的元素是所有与m互素的数，元素间的运算是相乘并模m</strong>！因此，若是有与m互素的数a，那么必有一个指数e，使得g<sup>e</sup>≡a(mod m)。我们把这个指数e叫做<strong>以g为底的a模m的指标</strong>。假设m和g已经给定，则记指标为I(a)。
+
+设I(a)是a的指标，I(b)是b的指标，由指标定义可知
+<p style="text-align: center;">g<sup>I(a)+I(b)</sup>≡g<sup>I(a)</sup>g<sup>I(b)</sup>≡ab≡g<sup>I(ab)</sup>(mod m)，</p>
+因此g<sup>I(ab)-I(a)-I(b)</sup>≡1(mod m)。然而g是原根，所以I(ab)-I(a)-I(b)必是Φ(m)的倍数，因此有I(ab)≡I(a)+I(b)(mod Φ(m))。类似可得I(a<sup>k</sup>)≡kI(a)(mod Φ(m))。于是有下述定理：
+
+<strong>指标法则</strong>：
+(1) I(ab)≡I(a)+I(b)(mod Φ(m)) [乘积法则]
+(2) I(a<sup>k</sup>)≡kI(a)(mod Φ(m)) [幂法则]
+
+<a name="spr"></a>根据原根的定义，要求n最小原根，只需从1遍历至n，直到发现第一个与n互素且次数为Φ(n)的数为止。那么必须要求出次数吗？不需要！我们<strong>只需判断</strong>！判断次数是否为Φ(n)！
+
+根据次数整除性质，设p<sub>1</sub>,...,p<sub>r</sub>是Φ(n)分解成素数乘积后的r个不同的素数，根据次数整除性质，容易证明，只要存在某一p<sub>i</sub>，使得a<sup>Φ(n)/p<sub>i</sub></sup>≡1(mod n)，a必然不是原根！换句话说，<strong>若对所有p<sub>i</sub>，a<sup>Φ(n)/p<sub>i</sub></sup>都不与1模n同余，则a就为模n的原根</strong>！<span style="text-decoration: underline; color: #ff0000;">若遍历完所有从1至n的与n互素的元素依然没找到原根，则说明数n不存在原根！</span>
+<p>{{ page.date | date_to_string }}</p>
+

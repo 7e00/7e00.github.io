@@ -1,0 +1,23 @@
+---
+layout: post
+title: 求解部分x^k=b(mod m)问题
+---
+
+<h2>{{ page.title }}</h2>
+原本信誓旦旦的想要解决整个一般性的x<sup>k</sup>≡b(mod m)问题，然而发现推理过程出了点问题（原因可看<a title="原根若干性质及最小原根的求解" href="https://narutoacm.github.io/2012/11/28/primitive-root.html" target="_blank">这里</a>），故把标题加了“部分”两字，亦即对另一部分的这类问题我还不会解决。
+
+对a<sup>b</sup>≡c(mod m)这个式子，实际上包括3个问题。在<a title="求解x=a^b(mod m)" href="https://narutoacm.github.io/2012/11/06/a-pow-b-mod-m.html" target="_blank">这篇</a>文章中，我们知道了已知a和b求解c。<a title="求解a^x=b(mod m)" href="https://narutoacm.github.io/2012/11/13/solve-discrete-log.html" target="_blank">这篇</a>文章中，掌握了已知a和c求b的方法。现在，只剩下最后一个问题：已知b和c，求解a。正式的，本文要解决的问题是：求解x<sup>k</sup>≡b(mod m)，其中k,b,m是整数且m&gt;0,k&gt;1。
+
+首先应该注意到的一点是，如果x有解，由于<a title="指数循环节" href="https://narutoacm.github.io/2012/11/06/a-pow-b-mod-m.html/#repetend" target="_blank">指数循环节</a>的存在，若是k比Φ(m)还大，可令k=k(mod Φ(m))+Φ(m)，这样就无需害怕指数k超级大了。因此，若是m较小，可直接穷举x从0至m-1，得到所有解。但m较大时，显然穷举的方法复杂度就有点不能承受了。
+
+同样的，素数探路原则，考虑m为素数的情况。m为素数时，若gcd(b,m)=m，显然有x≡0(mod m)。所以这里讨论当gcd(b,m)=1的情况。若gcd(k,Φ(m))=1，则有uk+vΦ(m)=1，有x<sup>1</sup>=x<sup>uk+vΦ(m)</sup>。若x是解，即x<sup>k</sup>≡b(mod m)，于是有x≡x<sup>uk+vΦ(m)</sup>≡b<sup>u</sup>x<sup>vΦ(m)</sup>(mod m)。因为gcd(b,m)=1，显然gcd(x,m)=1，因此有x<sup>vΦ(m)</sup>≡1（mod m)。于是，我们求得了
+<p style="text-align: center;"><strong>x≡b<sup>u</sup>(mod m), 其中m为素数, gcd(b,m)=gcd(k,Φ(m))=1, uk+vΦ(m)=1.</strong></p>
+那么k和Φ(m)不互素时的情况应该怎么做？毕竟不可能那么碰巧的给你的k和Φ(m)恰好互素，k应该可以是任意数，和m无关。
+
+因为m是素数，我们知道一定可以找到一个数g，使得g<sup>e</sup>≡b(mod m)！我们只要找到m的其中一个原根就行了！由原根定理可知，<strong>每个素数p都有且恰好有Φ(p-1)个原根</strong>！因此可以令g为最小的那个原根（如果你不知道什么是原根或怎么求最小原根，可以先看<a title="原根若干性质及最小原根的求解" href="http://www.narutoacm.com/archives/primitive-root/" target="_blank">这里</a>）。找出g之后，e就可以求出了，如果你还记得<a title="求解a^x=b(mod m)" href="http://www.narutoacm.com/archives/solve-discrete-log/" target="_blank">这里</a>的内容的话。于是由指标法则可以知道，若x<sup>k</sup>≡b(mod m)，则有kI(x)≡e(mod Φ(m))，因此可以求出I(x)（可以是多个解），于是x≡g<sup>I(x)</sup>(mod m)。
+
+现在，m是素数的情况解决了。当m是任意数时，由于我们扩展了原根的定义，只需m存在原根。并且<strong>在m存在原根的前提下</strong>，若gcd(b,m)=1，做法和m是素数的情况是相同的。当b和m不互素时，令d=gcd(b,m)，由x<sup>k</sup>≡b(mod m)可知m|(x<sup>k</sup>-b)，因此d|x<sup>k</sup>。把d分解成素数乘积的形式，设d=p<sub>1</sub><sup>a<sub>1</sub></sup>...p<sub>r</sub><sup>a<sub>r</sub></sup>，因此<strong>x必被p<sub>1</sub><sup>e<sub>1</sub></sup>...p<sub>r</sub><sup>e<sub>r</sub></sup>整除，其中e<sub>i</sub>=ceil(a<sub>i</sub>/k)</strong>。令c=p<sub>1</sub><sup>e<sub>1</sub></sup>...p<sub>r</sub><sup>e<sub>r</sub></sup>，于是可令x=cx′。令c<sup>k</sup>≡a(mod m)，显然d|c<sup>k</sup>，所以d|a。令a′=a/d，b′=b/d，m'=m/d，因此，同余式x<sup>k</sup>≡b(mod m)也即ax′<sup>k</sup>≡b(mod m)，可等价于同余式a′x′<sup>k</sup>≡b′(mod m′)。可把x′<sup>k</sup>看成一项，代表未知数，同余式即为线性同余方程。由于gcd(b′,m′)=1，所以，<strong>若gcd(a′,m′)≠1，那么方程无解</strong>。否则，方程有唯一解，设解为y，即有x′<sup>k</sup>≡y(mod m′)。而<strong>这是一个子问题</strong>，可递归求出x′的所有解。由x=cx′可知x的所有解即为x′的每个解乘以c！
+
+<strong>若是m没有原根，该怎么办？</strong>我也不知道。。。若是有哪位朋友知道并且愿意分享，<span style="font-weight: bold; font-size: 1.5em;">强烈热烈且迫切的欢迎您和我联系！</span>我的联系方式在<a title="About" href="http://www.narutoacm.com/about/" target="_blank">about</a>页面！
+<p>{{ page.date | date_to_string }}</p>
+

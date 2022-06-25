@@ -1,0 +1,49 @@
+---
+layout: post
+title: 求解x=a^b(mod m)
+---
+
+<h2>{{ page.title }}</h2>
+<p>
+本文致力于解决如下问题：<strong>求解x≡a<sup>b</sup>(mod m)，其中a,b,m都是正整数</strong>。
+
+如果b足够小，则可直接用<strong>逐次平方法</strong>求解，如果你不知道逐次平方法，可以先看<a title="利用逐次平方法快速求幂" href="https://narutoacm.github.io/2012/11/06/squared-by-squared.html" target="_blank">这里</a>。所以这里假设b足够大（这不是说是一个64位整数，而是可以上百上千位的一个数），大到逐次平方法也已不足以快速出解。
+
+用素数探路的思想，先假设m是素数，那么要么a与m互素，要么m|a。前者可利用<strong>费马小定理</strong>，令b = k(m-1) + b′，其中0≤b′&lt;m-1，则有a<sup>b</sup>≡a<sup>k(m-1)+b′</sup>≡a<sup>b′</sup>(mod m)。之后可用逐次平方法快速求解。若m|a，结果显然为0。
+
+现在考虑要求m可以是任意数的情况。同样，若a与m互素，由上边我们可联想到<strong>欧拉公式</strong>，利用欧拉公式求解。令b = kΦ(m) + b′，其中0≤b′&lt;Φ(m)，则有a<sup>b</sup>≡a<sup>kΦ(m)+b′</sup>≡a<sup>b′</sup>(mod m)，之后用逐次平方法快速求解。如果a与m不互素，即gcd(a,m)&gt;1，这种情况下应该怎么做？
+
+注意到b如此大，而模m的不同的数最多只有m个，显而易见的，<strong>a<sup>b</sup>一定和某个很小的指数a<sup>b′</sup>模m同余</strong>，如果找到这个小的指数，就可以利用逐次平方法求解。考虑如下序列：
+</p>
+<p style="text-align: center;">a<sup>0</sup>, a<sup>1</sup>, ..., a<sup>m</sup>(mod m)</p>
+<a name="repetend"></a>由鸽巢原理可知，必有一个<strong>最小的r和一个最小的s</strong>，使得a<sup>r</sup>≡a<sup>r+s</sup>(mod m)，其中r+s≤m。若找到这样的r和s，那么显然有a<sup>x</sup>≡a<sup>kr+x0</sup>≡a<sup>kr+s+x0</sup>≡a<sup>x+s</sup>(mod m)，其中x是大于或等于r的任意数。要注意的是，<strong>对任意大于或等于r的x，不存在更小的数s1，使得a<sup>x</sup>≡a<sup>x+s1</sup>(mod m)</strong>。假如有更小的这样的数s1存在，不妨设x = r+ks，因为若不这样，可以令x1 = x + x′ = r + ks，同余式两边同时乘以a<sup>x′</sup>，就变成a<sup>x1</sup>≡a<sup>x1+s1</sup>(mod m)，而x1 = r+ks。所以有a<sup>x</sup>≡a<sup>r+ks</sup>≡a<sup>r</sup>≡a<sup>r+s1</sup>(mod m)，其中s1&lt;s，这与我们找到的s是最小的相矛盾，所以这样的s1是不存在的。上面的论述给出以下的一个事实：序列
+<p style="text-align: center;">a<sup>0</sup>, a<sup>1</sup>, ..., a<sup>k</sup>, ...(mod m)</p>
+实际上是这样一个序列
+<p style="text-align: center;">a<sup>0</sup>, a<sup>1</sup>, ..., a<sup>r</sup>, a<sup>r+1</sup>, ..., a<sup>r+s-1</sup>, a<sup>r</sup>, a<sup>r+1</sup>, ...(mod m)</p>
+即<strong>a的0次、1次...幂模m的序列中，前r个数互不相同，从第r+1个数(注：指数为r)开始，每s个数就循环一次</strong>。我们把<strong>r称为a幂次模m的循环起始点，s称为循环长度</strong>。根据以上推导，如果我们能够找到r和s，那么大幂次b就能转换成一个小于m的幂次，然后用逐次平方法就可以求出问题的解。
+
+不妨把a分解成素数乘积的形式：a = p<sub>1</sub><sup>a1</sup>p<sub>2</sub><sup>a2</sup>...p<sub>n</sub><sup>an</sup>，那么a的b次幂模m就转换成每个素数的若干次幂模m的结果相乘再模m，而素数和m的关系只有两种，一种是互素，另一种是m的约数。第一种情况我们已经解决了，所以现在的问题转换成求素数p的b次幂模m，即p<sup>b</sup>(mod m)，其中p|m。
+
+如前所述，我们可以找到幂模m的r和s，使得p<sup>r</sup>≡p<sup>r+s</sup>(mod m)。于是m|(p<sup>r+s</sup> - p<sup>r</sup>)，即m|p<sup>r</sup>(p<sup>s</sup> - 1)，令m = p<sup>r0</sup>m′，其中gcd(p,m′)=1。因为gcd(p,p<sup>s</sup> - 1)=1，所以r至少为r0，即r≥r0，由r的最小性可得<strong>r即为r0</strong>。于是有m′|(p<sup>s</sup> - 1)，即有p<sup>s</sup>≡1(mod m′)。由s的最小性可知，我们只需要找出<strong>最小的一个使上式成立的指数，该指数即为s</strong>。事实上，这个指数叫做<strong>p模m′的次数</strong>。
+
+<strong>次数定义</strong>：对任意正整数a与m，其中gcd(a,m)=1，使得a<sup>e</sup>≡1(mod m)的最小指数e≥1叫做a模m的次数，记作e<sub>m</sub>(a)。
+
+现在证明如下次数性质：<strong>若有a<sup>n</sup>≡1(mod m)，则次数e<sub>m</sub>(a)整除n。特别的，次数总整除Φ(m)</strong>。
+
+<strong>证明</strong>：令g = gcd(n,e<sub>m</sub>(a))，则求得x, y使得nx + e<sub>m</sub>(a)y = g，于是有a<sup>nx</sup>≡1≡a<sup>g</sup>(mod m)，由次数的最小性可得g = e<sub>m</sub>(a)，即有e<sub>m</sub>(a)|n。又欧拉公式告诉我们a<sup>Φ(m)</sup>≡1(mod m)，结合上边推理可知次数总整除Φ(m)。证毕！
+
+由次数定义极其性质可知，<strong>s即为e<sub>m′</sub>(p)，并且s|Φ(m′)</strong>。由于m = p<sup>r0</sup>m′，且gcd(p,m′)=1，由欧拉Φ函数的积性可得Φ(m′)|Φ(m)，这说明<strong>s|Φ(m)</strong>。所以有p<sup>x</sup>≡p<sup>x+Φ(m)</sup>(mod m), x≥r=r0，于是p<sup>b</sup>≡p<sup>r+(b-r)(mod Φ(m))</sup>(mod m)。由于m = p<sup>r</sup>m′，所以Φ(m)≥Φ(p<sup>r</sup>)=p<sup>r-1</sup>(p-1)≥r，其中最后一步可用数学归纳法证明。所以
+<p style="text-align: center;"><strong>p<sup>b</sup>≡p<sup>r(mod Φ(m))+Φ(m)+(b-r)(mod Φ(m))</sup>≡p<sup>Φ(m)+b(mod Φ(m))</sup>(mod m)</strong></p>
+现在我们可以把a分解成素数乘积，然后对于乘积中每个素数，求出对应幂次模m的值，然后相乘再模m，就得出了解！
+
+<strong>能否直接求出a的幂次模m的循环起始点r和循环长度s？！</strong>
+
+假设素数p的幂次模m的循环起始点r0和循环长度s0已经求出了，那么<strong>p<sup>a</sup>的幂次模m的循环起始点和循环长度是多少？</strong>同样的分析方法，设循环起始点为r，循环长度为s，则有m|p<sup>ra</sup>(p<sup>sa</sup> - 1)，根据前面的论述，我们知道m = p<sup>r0</sup>m′，其中gcd(p,m′)=1，所以ra≥r0 → r≥r0/a → r≥ceil(r0/a)，<strong>由r的定义的最小性可得r = ceil(r0/a)</strong>。同样又有m′|(p<sup>sa</sup> - 1)，即p<sup>sa</sup>≡1(mod m′)，<strong>所以s = <sup>s0</sup>/<sub>gcd(s0,a)</sub>，即有s|s0|Φ(m)</strong>。
+
+设数a0的幂次模m的循环起始点为r0，循环长度为s0，数a1的幂次模m的循环起始点为r1，循环长度为s1，其中gcd(a0,a1)=1。现在，<strong>我们求a0a1的幂次模m的循环起始点r和循环长度s</strong>。由已知可得m|a0<sup>r0</sup>(a0<sup>s0</sup> - 1)，又显然gcd(a0,a0<sup>s0</sup>-1)=1，因为r0是循环起始点，所以m = a0<sup>r0</sup>m′，其中gcd(a0,m′)=1。同理也有m = a1<sup>r1</sup>m″，其中gcd(a1,m″)=1。又由于gcd(a0,a1)=1，所以有m = a0<sup>r0</sup>a1<sup>r1</sup>n，其中gcd(a0,n)=gcd(a1,n)=1。由m|(a0a1)<sup>r</sup>((a0a1)<sup>s</sup>-1)且gcd(a0a1,(a0a1)<sup>s</sup>-1)=1且gcd(a0,a1)=1可得，r≥r0且r≥r1。<strong>由r的最小性知r即为max(r0,r1)</strong>。于是n|((a0a1)<sup>s</sup>-1)，即(a0a1)<sup>s</sup>≡1(mod n)，<strong>所以s = e<sub>n</sub>(a0a1)</strong>。又m′|(a0<sup>s0</sup>-1)，而n|m′，所以a0<sup>s0</sup>≡1(mod n)。同理有a1<sup>s1</sup>≡1(mod n)。所以(a0a1)<sup>lcm(s0,s1)</sup>≡a0<sup>lcm(s0,s1)</sup>a1<sup>lcm(s0,s1)</sup>≡1(mod n)，<strong>由次数性质可得s|lcm(s0,s1)</strong>。
+
+当把a分解成素数乘积a = p<sub>1</sub><sup>a1</sup>p<sub>2</sub><sup>a2</sup>...p<sub>n</sub><sup>an</sup>时，以上讨论告诉我们<strong>a的幂次模m的循环起始点r = max(ceil(ri/ai)),(1≤i≤n)，其中ri是m中包含p<sub>i</sub>的最大次数</strong>。<strong>a的幂次模m的循环长度s|lcm(<sup>si</sup>/<sub>gcd(si,ai)</sub>),(1≤i≤n) |Φ(m)，其中si为p<sub>i</sub>的幂次模m的循环长度</strong>。因为ri&lt;=Φ(m)，所以r&lt;=Φ(m)。因此有
+<p style="text-align: center;"><strong>a<sup>b</sup>≡a<sup>r+(b-r)(mod s)</sup>≡a<sup>r+(b-r)(mod Φ(m))</sup>≡a<sup>b(mod Φ(m))+Φ(m)</sup>(mod m)</strong></p>
+问题解决！（所有公式都没用mathjax显示，看起来可能有点别扭~）
+<p>{{ page.date | date_to_string }}</p>
+
