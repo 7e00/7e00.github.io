@@ -1,0 +1,67 @@
+---
+layout: post
+title: 概率统计学相关笔记（四）
+---
+
+<h2>{{ page.title }}</h2>
+<p>
+统计学的基石就是大数定律与中心极限定理。大数定律告诉我们样本均值依概率收敛于总体均值，而中心极限定理进一步告诉我们样本均值大致服从正态分布。有这两个基础，统计推断的科学依据才有了保证。
+
+<strong>5个收敛</strong>：\(X_1,X_2\cdots\)是随机变量序列，\(X\)是另一随机变量，令\(F_n\)表示\(X_n\)的CDF，\(F\)为\(X\)的CDF。
+
+(1).如果对任意\(\epsilon\gt 0\)，当\(n\to\infty\)时有\[P(|X_n-X|\gt\epsilon)\to 0,\]则称\(X_n\)<strong>依概率收敛</strong>于\(X\)(converges to X in probability)，记为\(X_n\xrightarrow{P}X\)。
+
+(2).如果对\(F\)的所有连续点t，有\[\lim_{n\to\infty}F_n(t)=F(t),\]则称\(X_n\)<strong>依分布收敛</strong>于\(X\)(converges to X in distribution)，记为\(X_n\xrightarrow{F} X\)。
+
+(3).若\(E\left((X_n-X)^2\ight)\to 0\)，则称\(X_n\)<strong>依均方收敛</strong>于\(X\)(converges to X in quadratic mean)(也称\(L_2\)收敛)，记为\(X_n\xrightarrow{qm}X\)。 当X服从单点分布时，即如果\(P(X=c)=1\)，3类收敛于X的符号可以写成把X用c代替的形式，如\(X_n\xrightarrow{P}c\)。 这3个收敛的强弱性是有差别的，并不等价。依均方强于依概率，依概率强于依分布。下述关系说明了3者之间收敛的强弱：
+(a). \(X_n\xrightarrow{qm}X\)意味着\(X_n\xrightarrow{P}X\)。
+(b). \(X_n\xrightarrow{P}X\)意味着\(X_n\xrightarrow{F}X\)。
+(c). \(X_n\xrightarrow{F}c\)意味着\(X_n\xrightarrow{P}c\) 。
+
+注意(c)条规则，依分布收敛于一单点分布才能推出依概率收敛这一单点分布，否则不能从依分布推出依概率。证明就免了，一般也估计的出来3者的强弱，比如2次方收敛那1次方肯定收敛，即qm收敛比P收敛强。
+
+(4).若\(E(|X_n-X|)\to 0\)，则称<strong>\(X_n\)依\(L_1\)收敛于\(X\)(converges to X in \(L_1\))</strong>，记为\(X_n\xrightarrow{L_1}X\)。
+
+(5).依概率收敛是指\[\lim_{n\to\infty}P(|X_n-X|\gt\epsilon)=0\quad\text{or}\quad\lim_{n\to\infty}P(\{\omega:|X_n-X(\omega)|\gt\epsilon\})=0\]而如果\[P(\{\omega:\lim_{n\to\infty}X_n(\omega)=X(\omega)\})=1\]那么就称<strong>\(X_n\)几乎必然收敛于\(X\)(converge almost surely to \(X\))(也称为依概率1收敛)</strong>，记为\(X_n\xrightarrow{as}X\)。 依概率1收敛是比依概率收敛更强的收敛，它表示\(X_n\)几乎出处收敛到\(X\)。
+
+再加几个规则：
+(d). \(X_n\xrightarrow{as}X\)意味着\(X_n\xrightarrow{P}X\)。
+(e). \(X_n\xrightarrow{qm}X\)意味着\(X_n\xrightarrow{L_1}X\)。
+(f). \(X_n\xrightarrow{L_1}X\)意味着\(X_n\xrightarrow{P}X\)。
+
+<strong>收敛的性质</strong>：设\(X_n\)，\(X\)，\(Y_n\)，\(Y\)是随机变量，g是连续函数，收敛有如下性质：
+(a) 如果\(X_n\xrightarrow{P}X,Y_n\xrightarrow{P}Y\)，那么\(X_n+Y_n\xrightarrow{P}X+Y\)。
+(b) 如果\(X_n\xrightarrow{qm}X,Y_n\xrightarrow{qm}Y\)，那么\(X_n+Y_n\xrightarrow{qm}X+Y\)。
+(c) 如果\(X_n\xrightarrow{F}X,Y_n\xrightarrow{F}c\)，那么\(X_n+Y_n\xrightarrow{F}X+c\)。
+(d) 如果\(X_n\xrightarrow{P}X,Y_n\xrightarrow{P}Y\)，那么\(X_nY_n\xrightarrow{P}XY\)。
+(e) 如果\(X_n\xrightarrow{F}X,Y_n\xrightarrow{F}c\)，那么\(X_nY_n\xrightarrow{F}cX\)。
+(f) 如果\(X_n\xrightarrow{P}X\)，那么\(g(X_n)\xrightarrow{P}g(X)\)。
+(g) 如果\(X_n\xrightarrow{F}X\)，那么\(g(X_n)\xrightarrow{F}g(X)\)。
+
+<strong>弱大数定律(WLLN)</strong>：\(X_1,\cdots ,X_n\)为IID样本，方差\(V(X_i)=\sigma^2\lt\infty\)，则\(\bar{X_n}\xrightarrow{P}\mu\)，其中\(\mu=E(X_i)\)，\(\bar{X_n}=\frac{1}{n}\sum_{i=1}^nX_i\)。WLLN的含义是，当n逐渐变大时，\(\bar{X_n}\)的分布越靠近\(\mu\)，几乎变成一个常量。利用<a title="概率统计学相关笔记（三）" href="https://narutoacm.github.io/2014/03/05/prob-stati-notes3.html" target="_blank">Chebyshev不等式</a>就可以直接证明该定律。
+
+<strong>强大数定律(SLLN)</strong>：\(X_1,X_2,\cdots\)为IID样本，如果\(\mu=E(|X_i|)\lt\infty\)，则\(\bar{X_n}\xrightarrow{as}\mu\)。这说明样本均值几乎处处收敛于总体均值。
+
+样本方差如何呢？会依概率收敛于总体方差\(\sigma^2\)吗？\[\begin{array}{l}S_n^2&amp;=&amp;\frac{1}{n-1}\sum_{i=1}^n\left(X_i-\bar{X_n}\ight)^2\\&amp;=&amp;\frac{1}{n-1}\left(\sum_{i=1}^nX_i^2-n\bar{X_n}^2\ight)\\&amp;=&amp;\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^nX_i^2\ight)-\frac{n}{n-1}\bar{X_n}^2,\end{array}\]根据大数定律，\(\frac{1}{n}\sum_{i=1}^nX_i^2\xrightarrow{P}E(X^2)\)，又\(\frac{n}{n-1}\to1\)，所以\[\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^nX_i^2\ight)\xrightarrow{P}E(X^2)\quad\text{converge's property (d)}\]同样，根据大数定律，\(\bar{X_n}\xrightarrow{P}\mu\)，由于\(g(y)=y^2\)为连续函数，根据收敛性质(f)，所以有\(\bar{X_n}^2\xrightarrow{P}\mu^2\)，进而\(\frac{n}{n-1}\bar{X_n}^2\xrightarrow{P}\mu^2\)，根据收敛性质(a)，所以有\[S_n^2\xrightarrow{P}E(X^2)-\mu^2=\sigma^2.\]
+
+<strong>中心极限定理(CLT)</strong>：WLLN只说明\(\bar{X_n}\)的分布会聚集在\(\mu\)附近，但是并未描述\(\bar{X_n}\)具体的分布，中心极限指出，样本均值依分布收敛于正态分布。即\[Z_n\equiv\frac{\bar{X_n}-\mu}{\sqrt{V(\bar{X_n})}}=\frac{\sqrt{n}(\bar{X_n}-\mu)}{\sigma}\xrightarrow{F}Z,\]其中\(\sigma^2=V(X_i)\)，\(Z\sim N(0,1)\)。换句话说，下式成立：\[\lim_{n\to\infty}P(Z_n\leq z)=\Phi(z)=\int_{-\infty}^z\frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}}\,\mathrm{d}x.\]在很多情况下，\(\sigma\)是未知的，也需要去估计，样本方差\(S_n^2\)是一个对\(\sigma^2\)的很好的估计，用\(S_n\)代替中心极限定理中的\(\sigma\)，定理一样成立，即有\[\frac{\sqrt{n}(\bar{X_n}-\mu)}{S_n}\xrightarrow{F}N(0,1),\]其中，\(S_n^2=\frac{1}{n-1}\sum_{i=1}^n(X_i-\bar{X_n})^2\)。
+
+下面一个定理说明了这个近似正态到底近似到什么程度。
+
+<strong>Berry-Essèen定理</strong>：假设\(E(|X_i|^3)\lt\infty\)，则\[\sup_z|P(Z_n\leq z)-\Phi(z)|\leq\frac{33}{4}\frac{E(|X_1-\mu|^3)}{\sqrt{n}\sigma^3}.\]
+
+<strong>多元中心极限定理</strong>：\(X_1,\cdots ,X_n\)为IID随机向量，其中\[X_i=\begin{pmatrix}X_{1i}\\X_{2i}\\\vdots\\X_{ki}\end{pmatrix},\]其均值为\[\mu=\begin{pmatrix}\mu_1\\\mu_2\\\vdots\\\mu_k\end{pmatrix}=\begin{pmatrix}E(X_{1i})\\E(X_{2i})\\\vdots\\E(X_{ki})\end{pmatrix},\]协方差矩阵为\(\Sigma\)，令\[\bar{X}=\begin{pmatrix}\bar{X_1}\\\bar{X_2}\\\vdots\\\bar{X_k}\end{pmatrix},\]其中，\(\bar{X_j}=\frac{1}{n}\sum_{i=1}^nX_{ji}\)，则\[\sqrt{n}(\bar{X}-\mu)\xrightarrow{F}N(0,\Sigma).\]
+
+<strong>Delta方法</strong>：设\(Y_n\xrightarrow{F}N(\mu,\frac{\sigma^2}{n})\)，g可导且\(g'(\mu)\
+eq 0\)，那么\[g(Y_n)\xrightarrow{F}N(g(\mu),(g'(\mu))^2\frac{\sigma^2}{n}).\]Delta方法给出了随机变量变换的中心极限定理。同样也有多元Delta方法。
+
+<strong>多元Delta方法</strong>：\(Y_n=(Y_{n1},\cdots,Y_{nk})\)为随机向量序列，且\[\sqrt{n}(Y_n-\mu)\xrightarrow{F}N(0,\Sigma).\]令\(g:\mathbb{R}^k\to\mathbb{R}\)且\[\
+abla g(y)=\begin{pmatrix}\frac{\partial g}{\partial y_1}\\\vdots\\\frac{\partial g}{\partial y_k}\end{pmatrix}.\]令\(\
+abla_\mu\)表示\(\
+abla g(y)\)在\(y=\mu\)处的值并假设\(\
+abla_\mu\)的元素均是非零的，则有\[\sqrt{n}(g(Y_n)-g(\mu))\xrightarrow{F}N(0,\
+abla_\mu^T\Sigma\
+abla_\mu).\]
+</p>
+<p>{{ page.date | date_to_string }}</p>
+

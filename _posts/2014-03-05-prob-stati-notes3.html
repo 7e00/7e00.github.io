@@ -1,0 +1,29 @@
+---
+layout: post
+title: 概率统计学相关笔记（三）
+---
+
+<h2>{{ page.title }}</h2>
+<p>
+这篇讲各种概率不等式，这些不等式是统计学科学性的理论基础。主要理解各个不等式所代表的意义，这点很重要。
+
+<strong>Markov不等式</strong>：X为一非负随机变量，E(X)存在，对任意t&gt;0有\[P(X\gt t)\leq \frac{E(X)}{t}.\]证明：\[\begin{array}{l}tP(X\gt t)=\int_t^\infty tf(x)\,\mathrm{d}x &amp; \leq &amp; \int_t^\infty xf(x)\,\mathrm{d}x \\ &amp; \leq &amp; \int_0^\infty xf(x)\,\mathrm{d}x=E(X).\end{array}\]
+
+<strong>Chebyshev不等式</strong>：令\(\mu=E(X)\)，\(\sigma^2=V(X)\)，则\[P(|X-\mu|\geq t)\leq\frac{\sigma^2}{t^2},\quad P(|Z|\geq k)\leq\frac{1}{k^2},\]其中，\(Z=(X-\mu)/\sigma\)。
+
+证明：由Markov不等式可得\[P(|X-\mu|\geq t)=P((X-\mu)^2\geq t^2)\leq\frac{E((X-\mu)^2)}{t^2}=\frac{\sigma^2}{t^2},\]令\(t=k\sigma\)就得到另一式。
+
+这个不等式说明，随机变量X的值基本上都聚集在它的期望值附近。方差越大，就越散，方差越小，越集中。这个不等式非常重要，也是估计的基础。比如我们用样本均值来估计总体的均值，<strong>注意样本均值是个随机变量，而总体均值是一个定值</strong>。因为样本均值的期望就是总体均值，所以根据上述不等式就可以得出样本均值的值聚集在总体均值的附近。而样本数n越大，样本均值的方差会越小，上述概率会越小，说明“几乎一定等于总体均值”。于是我们就可以用样本均值来估计总体均值。
+
+<strong>Hoeffding不等式</strong>：Hoeffding不等式好像有很多个形式，all of statistics里的感觉较难理解，这里写一种好理解的。令\(X_1,\dots ,X_n\)为独立同分布随机变量，满足\(a_i\leq X_i\leq b_i\)。则对于任意\(t\gt 0\)有\[\begin{array}{l}P(\bar{X}-E(\bar{X})\geq t)\leq e^{-\frac{2n^2t^2}{\sum_{i=}^n(b_i-a_i)^2}} \\ P(|\bar{X}-E(\bar{X})|\geq t)\leq 2e^{-\frac{2n^2t^2}{\sum_{i=}^n(b_i-a_i)^2}}.\end{array}\]其中，\(\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i\)。这个看起来就这么吓人。。不证了。
+
+这个等式的意义在于，它指出了<strong>一组独立随机变量的均值离开它的期望的可能性以指数形式衰减</strong>。这意味着样本均值来估计总体均值是一个非常合理的估计。这个界是比Chebyshev的界要更强更精确的多。
+
+<strong>Mill不等式</strong>：令\(Z\sim N(0,1)\)，则\[P(|Z|\gt t)\leq \sqrt{\frac{2}{\pi}}\frac{e^{-t^2/2}}{t}.\]这个不等式给出了正态分布概率范围的一个界。也不会证。。
+
+<strong>Cauchy-Schwartz不等式</strong>：如果X和Y具有有限方差，那么\[E(|XY|)\leq\sqrt{E(X^2)E(Y^2)}.\]这个不等式可谓顶顶大名，线性代数，数学分析，到处都有它的身影。如一个向量形式的该定理是：\(\langle x\cdot y\angle\leq\|x\|\|y\|\)。
+
+<strong>Jensen不等式</strong>：若g为凸函数，则有\[E(g(X))\geq g(E(X)).\]若g是凹函数，则\[E(g(X))\leq g(E(X)).\]证明：作任意一条直线\(L(X)=a+bx\)与\(g(x)\)相切于\(x=E(X)\)处(注意\(E(X)\)是一个定值)，由于\(g(x)\)是凸函数，所以它在直线上方，所以\[E(g(X))\geq E(L(X))=a+bE(X)=L(E(X))=g(E(X)).\]由这个不等式可以知道\(E(X^2)\geq E(X)^2\)(否则方差不就成负了-_-)。如果X为正，则有\(E(\frac{1}{X})\geq\frac{1}{E(X)}\)，\(E(log(X))\leq log(E(X))\)。
+</p>
+<p>{{ page.date | date_to_string }}</p>
+

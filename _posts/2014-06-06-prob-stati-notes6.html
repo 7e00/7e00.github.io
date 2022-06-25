@@ -1,0 +1,31 @@
+---
+layout: post
+title: 概率统计学相关笔记（六）
+---
+
+<h2>{{ page.title }}</h2>
+<p>
+先来看看非参数估计。
+
+<strong>经验分布函数(EDF)</strong>：令\(X_1,\dots,X_n\sim F\)为IID样本，经验分布函数\(\hat{F_n}\)是样本的如下函数：\[\hat{F_n}(x)=\frac{\sum_{i=1}^nI(X_i\leq x)}{n},\]其中\(I(X_i\leq x)=\left\{\begin{array}{l}1,\quad X_i\leq x\\0,\quad X_i\gt x\end{array}\ight.\)，称作指示函数。需要注意的是，EDF是随机函数，给定一组样本的值，这个函数就确定了。而给定一个x，它就是随机变量\(X_1,\dots,X_n\)的函数，也就是一个随机变量。<strong>把n个样本看成是定值，或者说就给定n个样本的一组值，EDF实际上是假设这n个值中，每个值以等概率\(\frac{1}{n}\)出现的离散分布函数</strong>。不用我说，你肯定也知道一般用EDF来估计CDF的，那么EDF作为CDF的估计有多好呢？下面来看看EDF的性质。
+
+给定一个x，\(I(X\leq x)\)是一个随机变量X的函数，即也是一个随机变量，并且服从Bernoulli分布。因为\(I(X\leq x)\)只有2个值，要么是1，要么是0，并且\[P(I(X\leq x)=1)=P(X\leq x)=F(x)\]其中F是X的分布函数。所以\(\sum_{i=1}^nI(X_i\leq x)=n\hat{F_n}\sim Binomial(n,F(x))\)。因此，对任意x，有\[\begin{array}{l}E(\hat{F_n}(x))&amp;=&amp;F(x)\\V(\hat{F_n}(x))&amp;=&amp;\frac{F(x)(1-F(x))}{n}\to 0\\MSE(\hat{F_n}(x))&amp;=&amp;V(\hat{F_n}(x))\to 0\\&amp;\Rightarrow&amp;\hat{F_n}(x)\xrightarrow{P}F(x)\end{array}\]<strong>这说明EDF是CDF的无偏估计，一致估计</strong>。
+
+还不够，再来看看置信区间。首先给出2个定理。
+
+<strong>Glivenko-Cantelli定理</strong>：设样本\(X_1,\dots,X_n\sim F\)，则\[\sup_x|\hat{F_n}(x)-F(x)|\xrightarrow{P}0\]先来搞懂这个定理的意思。首先对任意一个x，F(x)是一个定值，\(\hat{F_n}(x)\)是一个随机变量，加个绝对值也是一个随机变量。外面再加一层sup得到的也是一个随机变量，这个意思是说，对最极端情况下取的x，\(\hat{F_n}(x)\)都依概率收敛于F(x)。
+
+<strong>Dvoretzky-Kiefer-Wolfowitz (DKW)不等式</strong>：上面的定理只说明EDF依概率收敛于CDF，这个定理进一步说明了收敛的程度。对任意\(\varepsilon\gt 0\)，有\[P\left(\sup_x|\hat{F_n}(x)-F(x)|\gt\varepsilon\ight)\leq 2e^{-2n\varepsilon^2}\]根据这个定理，即可构造F的1-α的置信区间。令\[\begin{array}{l}L(x)=\max\{\hat{F_n}(x)-\varepsilon_n,0\}\\U(x)=\min\{\hat{F_n}(x)+\varepsilon_n,1\}\end{array}\]其中，\(\varepsilon_n=\sqrt{\frac{1}{2n}\log{\frac{2}{\alpha}}}\)，于是有\[\begin{array}{l}P(L(x)\leq F(x)\leq U(x))&amp;\geq&amp;P(\hat{F_n}(x)-\varepsilon_n\leq F(x)\leq \hat{F_n}(x)+\varepsilon_n)\\&amp;=&amp;1-P(|\hat{F_n}(x)-F(x)|\gt\varepsilon_n)\\&amp;\geq&amp;1-2e^{-2n\varepsilon_n^2}=1-\alpha\end{array}\]所以\(L(x),U(x)\)是\(F(x)\)的\(1-\alpha\)的置信区间。
+
+<strong>嵌入式估计量(Plug-in Estimator)</strong>：要估计统计泛函(CDF的函数，即分布函数的函数，比如期望\(\int x\mathrm{d}F(x)\))有什么好的估计方法？一个方法就是嵌入式估计。所谓嵌入式估计就是用CDF的估计量EDF来代替CDF，得到对应统计泛函的估计。即要估计\(\theta=T(F)\)，用估计量\(\hat{\theta_n}=T(\hat{F_n})\)来估计它。特别的，当泛函T是一个线性泛函时(如果对某个函数r(x)，有\(T(F)=\int r(x)\,\mathrm{d}F(x)\))，嵌入式估计量\[T(\hat{F}_n)=\int r(x)\,\mathrm{d}\hat{F}_n(x)=\frac{1}{n}\sum_{i=1}^nr(X_i)\]
+
+我们只考虑线性泛函的估计。那么，嵌入式估计量好不好呢？先来看看它是否是无偏的。\[\begin{array}{l}E(T(\hat{F}_n(x)))&amp;=E(\frac{1}{n}\sum_{i=1}^nr(X_i))\\&amp;=\frac{1}{n}\sum_{i=1}^nE(r(X_i))\\&amp;=E(r(X)),\quad\text{because }E(r(X_i))=E(r(X))\\&amp;=\int r(x)\,\mathrm{d}F(x)=T(F(x))\end{array}\]<strong>这说明，对线性泛函的嵌入式估计是无偏估计。</strong>
+
+再来看看估计量的方差。先看一个例子，用嵌入式估计量来估计期望\(\mu\)，为\(\hat{\mu}=\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i\)。标准误差\(se(\hat{\mu})=\sqrt{V(\bar{X})}=\frac{\sigma}{\sqrt{n}}\)，其中\(\sigma\)是X的标准差。\(\sigma\)是未知的，用\(\hat{\sigma}\)来表示它的估计量，同样用嵌入式估计来求这个估计量。因为\(T(F)=\sigma^2=\int x^2\,\mathrm{d}F(x)-(\int x\,\mathrm{d}F(x))^2\)，所以\(\sigma^2\)的嵌入式估计量为\[\begin{array}{l}\hat{\sigma}^2&amp;=\int x^2\,\mathrm{d}\hat{F}_n(x)-\left(\int x\,\mathrm{d}\hat{F}_n(x)\ight)^2\\&amp;=\frac{1}{n}\sum_{i=1}^nX_i^2-\left(\frac{1}{n}\sum_{i=1}^nX_i\ight)^2\\&amp;=\frac{1}{n}\sum_{i=1}^n(X_i-\overline{X}_n)^2.\end{array}\]因此，期望的标准误差的估计\(\hat{se}(\hat{\mu})\)为\(\frac{\hat{\sigma}}{\sqrt{n}}\)。
+
+上面这个例子能够直接求出标准误差的估计量，但是很多情况下是很难求的。有一个方法可以有效的求标准误差的估计量：<strong>Bootstrap</strong>。
+
+来看看线性统计泛函的置信区间的估计，一般来说，线性泛函的嵌入式估计量满足中心极限定理，即有\[T(\hat{F}_n)\approx N(T(F),\hat{se}^2)\]这样，只要求出了\(\hat{se}^2\)，就能得到T(F)的近似1-α的基于正态的置信区间为\[T(\hat{F}_n)\pm z_{\alpha/2}\hat{se}.\]
+</p>
+<p>{{ page.date | date_to_string }}</p>
+

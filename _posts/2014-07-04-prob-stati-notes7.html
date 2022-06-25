@@ -1,0 +1,63 @@
+---
+layout: post
+title: 概率统计学相关笔记（七）
+---
+
+<h2>{{ page.title }}</h2>
+<p>
+这篇来讲求标准误差的估计的一个碉堡的方法——<strong>Bootstrap</strong>。
+
+<strong>统计量</strong>：样本\(X_1,\dots,X_n\)的函数\(g(X_1,\dots,X_n)\)是一个统计量。所有对总体的估计都是用统计量作为估计量的。如对CDF的估计，用EDF去估计它，EDF是样本的函数。对统计泛函如期望的估计，用它的嵌入式估计量去估计它，嵌入式估计量也是样本的函数，是一个统计量。
+
+当我们用一个统计量作为某个参数的估计量时，为考察这个估计量的好坏程度，我们需要求出这个估计量的期望以考察无偏性，方差以考察有效性等。而一个估计量除少数几个外往往形式非常复杂，很难用解析的形式求出其方差及其方差的估计量，这时候一个可用的工具就是Bootstrap，来求解其方差的估计量。（希望这里没有搞晕菜，来明确一下，<strong>Bootstrap用来来求一个估计量(统计量)的方差的估计量</strong>）。
+
+来看看Bootstrap如何求一个统计量的方差的估计。设有样本\(X=(X_1,\dots,X_n)\)，统计量\(T_n=g(X)=g(X_1,\dots,X_n)\)，求\(V(T_n)\)的估计量。
+
+<strong>step 1</strong>：从\(X_1,\dots,X_n\)可放回的抽样n次，得到一个Bootstrap样本\(X_b^*=(X_{1,b}^*,\dots,X_{n,b}^*)\)。
+
+<strong>step 2</strong>：计算得到的Bootstrap样本的统计量\(T_{n,b}^*=g(X_b^*)\)。
+
+<strong>step 3</strong>：重复step 1,2 B次(这个B要比较大)，得到B个Bootstrap样本的统计量\(T_{n,1}^*,\dots,T_{n,B}^*\)。
+
+<strong>step 4</strong>：计算\[\begin{array}{l}\overline{T_n^*}&amp;=&amp;\frac{1}{B}\sum_{b=1}^BT_{n,b}^*\\v_{boot}&amp;=&amp;\frac{1}{B}\sum_{b=1}^B\left(T_{n,b}^*-\overline{T_n^*}\ight)^2\end{array}\]\(v_{boot}\)即是\(V(T_n)\)的估计。
+
+以上就是Bootstrap求统计量方差估计的步骤。我想通过看这个步骤也能看出一些端倪，大概是利用了大数定理之类的。后面我们会看到，Bootstrap方法也分非参数的Bootstrap和参数化的Bootstrap，上述4个步骤实际上是非参数的Bootstrap过程，但其中心思想都是一致的，就是<strong>“模拟”</strong>。
+
+什么是模拟呢？
+
+现在我们要求\(T_n\)方差的估计，我们知道\(T_n\)是个随机变量，它有它的分布函数，假设叫做\(G_n\)。大数定理告诉我们，如果我们从\(G_n\)中抽取B个IID样本\(T_{n,1},\dots,T_{n,B}\)，那么当B趋向无穷大时，有\[\overline{T_n}=\frac{1}{B}\sum_{b=1}^BT_{n,b}\xrightarrow{P}E(T_n)\]也就是说，假如我们从\(G_n\)中抽取大量样本，那么就可以用样本均值\(\overline{T_n}\)来近似\(E(T_n)\)。当抽取的样本足够多，也就是B足够大时，其差别非常小。
+
+更一般的，<strong>对任意期望有限的函数h，可以证明，当B趋向无穷大时有\[\frac{1}{B}\sum_{b=1}^Bh(T_{n,b})\xrightarrow{P}\int h(t)\,\mathrm{d}G_n(t)=E(h(T_n))\]当\(h(T_{n,b})=(T_{n,b}-\overline{T_n})^2\)时，\[\frac{1}{B}\sum_{b=1}^B(T_{n,b}-\overline{T_n})^2\xrightarrow{P}E\left((T_n-\overline{T_n})^2\ight)=V(T_n)\]</strong>
+
+从上述讨论中我们看到，<strong>最关键的步骤就是要得到Bootstrap样本</strong>，而Bootstrap样本是由\(T_n\)的分布\(G_n\)生成的，那么\(G_n\)怎么得到呢？\(T_n\)是\((X_1,\dots,X_n)\)的函数，因此\(G_n\)只和\(F\)有关，这样，我们从\(F\)中生成n个样本\((X_1^*,\dots,X_n^*)\)，然后就可以得到\(G_n\)的一个样本\(T_n^*=g(X_1^*,\dots,X_n^*)\)。问题是，\(F\)也是未知的啊？怎么办？用EDF\(\hat{F}_n\)估计啊！而EDF怎么生成总体X的样本呢？？我们知道\(\hat{F}_n\)是假设了IID样本\((X_1,\dots,X_n)\)的每个以\(\frac{1}{n}\)概率出现的，那么从\(\hat{F}_n\)生成一个样本就是随机的从\((X_1,\dots,X_n)\)选一个咯！这就是上述step 1中为什么做可放回抽样的原因！这个步骤就是模拟。
+
+总结一下，实际上<strong>Bootstrap做了2个近似</strong>：
+
+<strong>在真实世界中：\(F\Rightarrow X_1,\dots,X_n\Rightarrow T_n=g(X_1,\dots,X_n)\)</strong>
+
+<strong>而在Bootstrap世界中：\(\hat{F}_n\Rightarrow X_1^*,\dots,X_n^*\Rightarrow T_n^*=g(X_1^*,\dots,X_n^*)\)</strong>
+
+第一个近似是用\(\hat{F}_n\)来近似F，即\[V_F(T_n)\approx V_{\hat{F}_n}(T_n)\]这个近似的误差比较大。
+
+第二个近似是用\(v_{boot}\)来近似\(V_{\hat{F}_n}(T_n)\)，即\[V_{\hat{F}_n}(T_n)\approx v_{boot}\]当B比较大时，这个近似的误差比较小。
+
+以上就是Bootstrap的中心思想了。其实，不仅可以用Bootstrap来估计方差，也可以用来估计CDF，偏差，置信区间等，其思想是一致的。如估计置信区间的话，假如\(T_n\)近似服从正态分布，通过上述讨论我们能够用Bootstrap来估计\(T_n\)的标准差\(\hat{se}\)，这样就能得到\(T_n\)的置信度为1-\(\alpha\)的正态区间\(T_n\pm z_{\alpha/2}\hat{se}\)。
+
+可以看到，上述非参数化Bootstrap成功的关键就是EDF\(\hat{F}_n\)能够很好的近似实际的CDF。所以，当这个条件不满足时，Bootstrap就会失败。这时当我们有F的先验知识，例如知道它的参数知识，那么就可以用参数化的Bootstrap来求解。
+
+参数化的Bootstrap是这样的：
+
+真实世界：\(f(x:\theta)\Rightarrow X_1,\dots,X_n\Rightarrow T_n=g(X_1,\dots,X_n)\)
+
+Bootstrap世界：\(f(x:\hat{\theta})\Rightarrow X_1^*,\dots,X_n^*\Rightarrow T_n^*=g(X_1^*,\dots,X_n^*)\)
+
+参数化的Bootstrap假设F是参数模型。因此，参数化的Bootstrap比非参数化的多了一个步骤：利用数据估计估计参数\(\hat{\theta}\)，从而用\(f(x:\hat{\theta})\)来获得Bootstrap样本。
+
+<strong>参数bootstrap Vs. 非参数的bootstrap</strong>
+
+F的先验：参数bootstrap中利用了分布F的先验，表现为一个参数模型，因此多了一个步骤，估计F模型中的参数。当先验模型正确时，参数bootstrap能得到更好的结果。而非参数bootstrap不利用F的先验知识就能得到正确的标准误差（在大多数情况下）。参数bootstrap能得到与Delta方法（计算变量的函数的方差）相当的结果，但更简单。
+
+重采样：参数bootstrap中，通过从分布\(f(x:\hat{\theta})\)中产生随机数，得到bootstrap样本，得到的样本通常与原始样本不重合。非参数bootstrap中，通过对原始样本进行有放回采样实现对\(\hat{F}_n\)的采样，每个bootstrap样本都是原始样本集合的一部分。
+</p>
+<p>{{ page.date | date_to_string }}</p>
+

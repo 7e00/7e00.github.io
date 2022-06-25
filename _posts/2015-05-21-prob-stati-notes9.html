@@ -5,6 +5,7 @@ title: 概率统计学相关笔记（九）
 
 <h2>{{ page.title }}</h2>
 <h3>1. 多元高斯分布</h3>
+<p>这里介绍几个常见的分布的最大似然估计解析解。</p>
 <p>令\(X\sim N(\mu,\Sigma)\)为k元高斯分布，\(X_1,\dots,X_n\)为iid样本。似然函数为\[\begin{array}{l}L(\mu,\Sigma)&=&\prod_{i=1}^n\frac{1}{\sqrt{(2\pi)^k|\Sigma|}}e^{-\frac{1}{2}(X_i-\mu)^T\Sigma^{-1}(X_i-\mu)}\\&=&C|\Sigma|^{-\frac{n}{2}}e^{\sum_{i=1}^n-\frac{1}{2}(X_i-\mu)^T\Sigma^{-1}(X_i-\mu)}\end{array}\]</p>
 <p>对数似然函数为\[\begin{array}{l}l(\mu,\Sigma)=\frac{n}{2}\ln|\Sigma^{-1}|-\frac{1}{2}\sum_{i=1}^n(X_i-\mu)^T\Sigma^{-1}(X_i-\mu)+const\end{array}\]</p>
 <p>\[\begin{array}{l}\frac{\partial l}{\partial\mu} & = & \Sigma^{-1}\sum_{i=1}^n(X_i-\mu) \\\frac{\partial l}{\partial\Sigma^{-1}} & = & \frac{n}{2}\Sigma-\frac{1}{2}\sum_{i=1}^n(X_i-\mu)(X_i-\mu)^T\end{array}\]</p>
