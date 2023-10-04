@@ -1,2 +1,2 @@
-narutoacm.github.com
+7e00.github.com
 ====================
